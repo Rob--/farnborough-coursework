@@ -1,6 +1,11 @@
 import Utils from '../../../components/Utils';
 
-Utils.getMusicFolder().then(console.log);
+Utils.getMusicFolder().then((files) => {
+  files.forEach(async (file) => {
+    const song = await Utils.parseSong(file);
+    console.log(song);
+  });
+});
 
 const mutations = {
 
