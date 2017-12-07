@@ -1,5 +1,7 @@
 import { remote } from 'electron' // eslint-disable-line
 import FileUtils from './FileUtils';
+import Song from './Models/Song';
+// import Database from './Database';
 const fs = require('fs');
 const getMetadata = require('musicmetadata');
 const getDuration = require('get-video-duration');
@@ -33,15 +35,28 @@ class Utils {
 
         // Duration is retrieved in seconds, so we format it
         const duration = await getDuration(path);
-        const minutes = Math.floor(duration / 60);
-        const seconds = Math.round(duration - (minutes * 60));
-        data.duration = `${minutes}:${seconds}`;
+        data.duration = duration;
+        // const minutes = Math.floor(duration / 60);
+        // const seconds = Math.round(duration - (minutes * 60));
+        // data.duration = `${minutes}:${seconds}`;
 
         // Prevent memory leaks
         stream.close();
 
-        resolve(data);
+        resolve(new Song(path, data));
       });
+    });
+  }
+
+  static async filePathsToSongs(paths) {
+    return new Promise(async (resolve) => {
+      const pathMapping = async (path) => {
+        const song = await this.parseSong(path);
+        return song;
+      };
+
+      const songs = await Promise.all(paths.map(pathMapping));
+      resolve(songs);
     });
   }
 }

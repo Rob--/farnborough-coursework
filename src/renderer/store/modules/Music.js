@@ -1,10 +1,9 @@
 import Utils from '../../../components/Utils';
+import Database from '../../../components/Database';
 
-Utils.getMusicFolder().then((files) => {
-  files.forEach(async (file) => {
-    const song = await Utils.parseSong(file);
-    console.log(song);
-  });
+Utils.getMusicFolder().then(async (files) => {
+  const songs = await Utils.filePathsToSongs(files);
+  Database.saveSongs(songs);
 });
 
 const mutations = {
