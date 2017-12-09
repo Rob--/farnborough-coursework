@@ -56,6 +56,10 @@ class Utils {
       };
 
       const songs = await Promise.all(paths.map(pathMapping));
+      songs.map((element, index) => {
+        element.id = index;
+        return element;
+      });
       resolve(songs);
     });
   }

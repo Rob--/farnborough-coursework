@@ -3,43 +3,56 @@
     <main>
       <div class="left-side">
         <span class="title">Music Player</span>
-        <p>
-          This is just random place holder text to test if the application successfuly compiles.
-          <br><br>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dictum ligula at dolor tincidunt,
-          ut hendrerit augue dapibus. In et arcu at elit placerat bibendum. Vestibulum ac lacus interdum, consectetur
-          nibh eu, porta tellus. Vestibulum quis mi sed odio pellentesque dignissim. Pellentesque sit amet sem id sapien
-          imperdiet posuere sit amet sed est.
-        </p>
+        <ol style="list-style:none">
+          <li v-for="(song, index) in songs" :key="index">
+            <song :index="index" :id="song.id" :name="song.title" :duration="song.duration" :artists="song.artists"></song>
+          </li>
+        </ol>
       </div>
-
-      <!--<div class="right-side">-->
-        <!--<div class="doc">-->
-          <!--<div class="title">Music Player</div>-->
-          <!--<p>-->
-            <!--Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dictum ligula at dolor tincidunt,-->
-            <!--ut hendrerit augue dapibus. In et arcu at elit placerat bibendum. Vestibulum ac lacus interdum, consectetur-->
-            <!--nibh eu, porta tellus. Vestibulum quis mi sed odio pellentesque dignissim. Pellentesque sit amet sem id sapien-->
-            <!--imperdiet posuere sit amet sed est.-->
-          <!--</p>-->
-        <!--</div>-->
-        <!--<div class="doc">-->
-          <!--<div class="title alt">More place holder text</div>-->
-          <!--<p>-->
-            <!--Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dictum ligula at dolor tincidunt,-->
-            <!--ut hendrerit augue dapibus. In et arcu at elit placerat bibendum. Vestibulum ac lacus interdum, consectetur-->
-            <!--nibh eu, porta tellus. Vestibulum quis mi sed odio pellentesque dignissim. Pellentesque sit amet sem id sapien-->
-            <!--imperdiet posuere sit amet sed est.-->
-          <!--</p>-->
-        <!--</div>-->
-      <!--</div>-->
+      
+      <!-- <div class="right-side">
+        <div class="doc">
+          <div class="title">Music Player</div>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dictum ligula at dolor tincidunt,
+            ut hendrerit augue dapibus. In et arcu at elit placerat bibendum. Vestibulum ac lacus interdum, consectetur
+            nibh eu, porta tellus. Vestibulum quis mi sed odio pellentesque dignissim. Pellentesque sit amet sem id sapien
+            imperdiet posuere sit amet sed est.
+          </p>
+        </div>
+        <div class="doc">
+          <div class="title alt">More place holder text</div>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque dictum ligula at dolor tincidunt,
+            ut hendrerit augue dapibus. In et arcu at elit placerat bibendum. Vestibulum ac lacus interdum, consectetur
+            nibh eu, porta tellus. Vestibulum quis mi sed odio pellentesque dignissim. Pellentesque sit amet sem id sapien
+            imperdiet posuere sit amet sed est.
+          </p>
+        </div>
+      </div> -->
     </main>
   </div>
 </template>
 
 <script>
+  import { mapActions } from 'vuex';
+  import Song from './Song';
+
   export default {
     name: 'landing-page',
+    components: { Song },
+    mounted() {
+      this.$store.dispatch('refreshSongLibrary');
+      console.log('Refreshing song library...');
+    },
+    methods: {
+      ...mapActions(['refreshSongLibrary']),
+    },
+    computed: {
+      songs() {
+        return this.$store.state.Music.songLibrary;
+      },
+    },
   };
 </script>
 
@@ -56,7 +69,7 @@
   }
 
   main > div {
-    flex-basis: 50%;
+    flex-basis: 75%;
   }
 
   .left-side {
