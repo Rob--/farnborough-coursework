@@ -1,5 +1,6 @@
 class Song {
-  constructor(path, metadata) {
+  constructor(path, metadata, songID = -1) {
+    this.id = songID;
     this.path = path;
     this.title = metadata.title;
     this.artists = metadata.artist;

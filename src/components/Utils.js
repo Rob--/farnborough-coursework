@@ -1,11 +1,11 @@
 import { remote } from 'electron' // eslint-disable-line
 import FileUtils from './FileUtils';
 import Song from './Models/Song';
-// import Database from './Database';
+
 const fs = require('fs');
+const path = require('path');
 const getMetadata = require('musicmetadata');
 const getDuration = require('get-video-duration');
-const path = require('path');
 
 class Utils {
   static async getMusicFolder() {
@@ -14,7 +14,7 @@ class Utils {
     return files;
   }
 
-  static async parseSong(path) {
+  static async parseSong(path, songID = -1) {
     return new Promise((resolve, reject) => {
       const stream = fs.createReadStream(path);
       getMetadata(stream, async (error, data) => {
@@ -43,7 +43,7 @@ class Utils {
         // Prevent memory leaks
         stream.close();
 
-        resolve(new Song(path, data));
+        resolve(new Song(path, data, songID));
       });
     });
   }
@@ -56,10 +56,6 @@ class Utils {
       };
 
       const songs = await Promise.all(paths.map(pathMapping));
-      songs.map((element, index) => {
-        element.id = index;
-        return element;
-      });
       resolve(songs);
     });
   }

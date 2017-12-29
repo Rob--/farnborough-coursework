@@ -61,6 +61,7 @@
     "electron": "^1.7.9",
     "get-video-duration": "^0.2.0",
     "musicmetadata": "^2.0.5",
+    "player": "^0.6.1",
     "sqlite3": "^3.1.13",
     "vue": "^2.3.3",
     "vue-electron": "^1.0.6",

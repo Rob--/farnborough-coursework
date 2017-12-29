@@ -1,9 +1,9 @@
 // https://gist.github.com/jonataswalker/b5a5c008cb92a4721b1e83a2b3b22dc7
+import Utils from './Utils';
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database('database.db');
 
 db.serialize(() => {
-  db.run('DROP TABLE Genres');
   db.run('CREATE TABLE IF NOT EXISTS Songs (SongID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Duration INTEGER, FilePath TEXT, Genre INTEGER)');
   db.run('CREATE TABLE IF NOT EXISTS Genres (GenreID INTEGER PRIMARY KEY AUTOINCREMENT, Genre TEXT)');
   db.run('CREATE TABLE IF NOT EXISTS SongArtist (SongID INTEGER, ArtistID INTEGER)');
@@ -48,6 +48,24 @@ function saveSongs(songs) {
   });
 }
 
+function getSongs() {
+  return new Promise((resolve, reject) => {
+    db.all('SELECT * FROM Songs', async (error, rows) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      const parseSongPromises =
+        rows.map(({ FilePath, SongID }) => Utils.parseSong(FilePath, SongID));
+
+      const songs = await Promise.all(parseSongPromises);
+
+      resolve(songs);
+    });
+  });
+}
+
 function getGenreId(genre) {
   return new Promise((resolve, reject) => {
     db.get('SELECT GenreID FROM Genres WHERE Genre = ?', genre, (selectError, row) => {
@@ -76,6 +94,20 @@ function getGenreId(genre) {
   });
 }
 
+function getSongById(id) {
+  return new Promise((resolve, reject) => {
+    db.get('SELECT s.SongID, s.Name, s.Duration, s.FilePath, g.genre FROM Songs s INNER JOIN Genres g ON g.GenreID = s.Genre WHERE s.SongID = ?', id, (error, row) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      const song = Utils.parseSong(row.FilePath, row.SongID);
+      resolve(song);
+    });
+  });
+}
+
 export default {
-  saveSongs, getGenreId,
+  saveSongs, getSongs, getGenreId, getSongById,
 };

@@ -1,5 +1,6 @@
 import Utils from '../../../components/Utils';
 import Database from '../../../components/Database';
+import Player from '../../../components/Player';
 
 const mutations = {
   SET_SONG_LIBRARY(state, songs) {
@@ -15,14 +16,16 @@ const actions = {
   refreshSongLibrary(context) {
     Utils.getMusicFolder().then(async (files) => {
       const songs = await Utils.filePathsToSongs(files);
-      Database.saveSongs(songs);
+      await Database.saveSongs(songs);
 
-      context.commit('SET_SONG_LIBRARY', songs);
+      const newSongs = await Database.getSongs();
+      context.commit('SET_SONG_LIBRARY', newSongs);
     });
   },
 
-  playSong(context, id) {
-    // [ play the song ]
+  async playSong(context, id) {
+    const song = await Database.getSongById(id);
+    Player.play(song.path);
     context.commit('SET_CURRENTLY_PLAYING', id);
   },
 
