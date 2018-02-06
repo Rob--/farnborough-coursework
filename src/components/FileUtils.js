@@ -15,10 +15,9 @@ class FileUtils {
     const getFiles = async (parent) => {
       // Read all the file names inside the directory (including folders)
       const files = await fs.readdirAsync(parent);
-
       const mappings = files.map(async (file) => {
         // Get stats about the file (to determine if it's a folder);
-        const stat = await fs.statAsync(path.join(directory, file));
+        const stat = await fs.statAsync(path.join(parent, file));
 
         if (stat.isDirectory()) {
           // If it's a folder, recursively search

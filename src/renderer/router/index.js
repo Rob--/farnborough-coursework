@@ -7,13 +7,23 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'landing-page',
-      component: require('@/components/LandingPage').default,
+      path: '/library',
+      name: 'Library',
+      component: require('@/components/Library').default,
+    },
+    {
+      path: '/create-playlist',
+      name: 'Create Playlist',
+      component: require('@/components/CreatePlaylist').default,
+    },
+    {
+      path: '/playlists',
+      name: 'Playlists',
+      component: require('@/components/Playlists').default,
     },
     {
       path: '*',
-      redirect: '/',
+      redirect: '/library',
     },
   ],
 });

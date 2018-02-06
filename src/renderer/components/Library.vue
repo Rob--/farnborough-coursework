@@ -2,9 +2,10 @@
   <div id="wrapper">
     <main>
       <div class="left-side">
-        <span class="title">Music Player</span>
+        <span class="title">Your Songs ({{ songs().length }} song{{ songs().length > 1 ? 's' : '' }})</span>
+        <hr>
         <ol style="list-style:none">
-          <li v-for="(song, index) in songs" :key="index">
+          <li v-for="(song, index) in songs()" :key="index">
             <song :index="index" :id="song.id" :name="song.title" :duration="song.duration" :artists="song.artists"></song>
           </li>
         </ol>
@@ -35,23 +36,19 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex';
+  import { mapActions, mapGetters } from 'vuex';
   import Song from './Song';
 
   export default {
-    name: 'landing-page',
+    name: 'library',
     components: { Song },
     mounted() {
-      this.$store.dispatch('refreshSongLibrary');
+      this.refreshSongLibrary();
       console.log('Refreshing song library...');
     },
     methods: {
       ...mapActions(['refreshSongLibrary']),
-    },
-    computed: {
-      songs() {
-        return this.$store.state.Music.songLibrary;
-      },
+      ...mapGetters(['songs']),
     },
   };
 </script>
@@ -59,7 +56,7 @@
 <style scoped>
   #wrapper {
     height: 100vh;
-    padding: 60px 80px;
+    padding: 0px 80px 60px 80px;
     width: 100vw;
   }
 
@@ -69,7 +66,8 @@
   }
 
   main > div {
-    flex-basis: 75%;
+    /* flex-basis: 75%; */
+    flex-basis: 100%;
   }
 
   .left-side {

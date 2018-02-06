@@ -5,9 +5,11 @@ class Song {
     this.title = metadata.title;
     this.artists = metadata.artist;
     this.duration = metadata.duration;
-    this.year = metadata.year;
-    this.pictures = metadata.picture;
     this.genres = metadata.genre;
+  }
+
+  toString() {
+    return `${this.path}, ${this.title}, ${this.duration}`;
   }
 }
 

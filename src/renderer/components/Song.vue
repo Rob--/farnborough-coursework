@@ -2,13 +2,22 @@
     <div class="song" v-bind:class="{ active: playing }" @mouseover="onMouseover()" @mouseout="onMouseout()">
         <div class="track">
             <span v-if="!hover">{{index + 1}}.</span>
-            <i v-if="hover" @click="play()" class="fa fa-play" aria-hidden="true"></i>
+            <i v-if="hover && !playing" @click="play()" class="fa fa-play" aria-hidden="true"></i>
+            <i v-if="hover && playing" @click="stop()" class="fa fa-stop" aria-hidden="true"></i>
         </div>
         <div class="details">
             <div class="name" v-bind:class="{ active: playing }">{{name}}</div>
             <div class="artist">{{artists.join(', ')}}</div>
        </div>
        <div class="duration">{{formatDuration(duration)}}</div>
+       <!-- <div style="
+    position: absolute;
+    right: 0;
+    width: 100px;
+    z-index: 99;
+    height: 100%;
+    background-image: linear-gradient(to right, rgba(29, 233, 182, 0) 60%, rgb(32, 156, 238) 125%);
+"></div> -->
     </div>
 </template>
 
@@ -46,7 +55,12 @@ export default {
       console.log(`Now playing: ${this.name}`);
     },
 
-    ...mapActions(['playSong']),
+    stop() {
+      this.stopSong(this.id);
+      console.log(`Stopping: ${this.name}`);
+    },
+
+    ...mapActions(['playSong', 'stopSong']),
   },
   computed: {
     playing() {
